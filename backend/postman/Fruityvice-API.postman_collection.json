@@ -1,0 +1,200 @@
+{
+  "info": {
+    "_postman_id": "b7f0a5b8-2c3d-4e5f-8a9b-0c1d2e3f4a5b",
+    "name": "Fruityvice REST API - Lesson 90",
+    "description": "REST API that serves fruit data from https://www.fruityvice.com and logs every API request to the MySQL logs table (logs_db.logs).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET all fruits",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is a non-empty array', function () {",
+              "    pm.expect(pm.response.json()).to.be.an('array').that.is.not.empty;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/fruits",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "fruits"
+          ]
+        },
+        "description": "Returns the full list of fruits from the Fruityvice API."
+      },
+      "response": []
+    },
+    {
+      "name": "Search fruits by text",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is an array', function () {",
+              "    pm.expect(pm.response.json()).to.be.an('array');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/search/apple",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "search",
+            "apple"
+          ]
+        },
+        "description": "Returns every fruit whose name contains the text, case-insensitively. When nothing matches, an empty array is returned."
+      },
+      "response": []
+    },
+    {
+      "name": "Search fruits - no results (empty array)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is an empty array', function () {",
+              "    pm.expect(pm.response.json()).to.be.an('array').that.is.empty;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/search/zzzznotafruit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "search",
+            "zzzznotafruit"
+          ]
+        },
+        "description": "Demonstrates the empty-array behaviour when the searched fruit does not exist."
+      },
+      "response": []
+    },
+    {
+      "name": "Fruits up to a calories limit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('All fruits are within the calories limit', function () {",
+              "    var fruits = pm.response.json();",
+              "    pm.expect(fruits).to.be.an('array');",
+              "    fruits.forEach(function (fruit) {",
+              "        pm.expect(fruit.nutritions.calories).to.be.at.most(50);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/calories/50",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "calories",
+            "50"
+          ]
+        },
+        "description": "Returns all fruits whose calories value is lower than or equal to the value in the route parameter."
+      },
+      "response": []
+    },
+    {
+      "name": "Fruits up to a calories limit - no results (empty array)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is an empty array', function () {",
+              "    pm.expect(pm.response.json()).to.be.an('array').that.is.empty;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/calories/0",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "calories",
+            "0"
+          ]
+        },
+        "description": "Demonstrates the empty-array behaviour when no fruit is under the requested calories limit."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    }
+  ]
+}
